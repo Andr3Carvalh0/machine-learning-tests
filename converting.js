@@ -6,18 +6,7 @@ const rl = readline.createInterface({
     output: process.stdout,
 })
 
-const CATEGORIES = [
-    'No Issue/Not Clear',
-    'Player/Watching',
-    'App Performance/Stability',
-    'Not Working (General)',
-    'AirPlay/Chromecast',
-    'Out Of Home',
-    'Recordings',
-    'Account issues',
-    'Suggestions',
-    'Other'
-]
+const CATEGORIES = require('./output/model/categories.json')
 
 function convert(path) {
     return JSON.parse(fs.readFileSync(path))

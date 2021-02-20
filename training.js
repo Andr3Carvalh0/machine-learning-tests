@@ -4,18 +4,7 @@ const resolve = path.resolve
 const tf = require('@tensorflow/tfjs-node')
 const sentenceModel = require('@tensorflow-models/universal-sentence-encoder')
 
-const CATEGORIES = [
-    'No Issue/Not Clear',
-    'Player/Watching',
-    'App Performance/Stability',
-    'Not Working (General)',
-    'AirPlay/Chromecast',
-    'Out Of Home',
-    'Recordings',
-    'Account issues',
-    'Suggestions',
-    'Other'
-]
+const CATEGORIES = require('./output/model/categories.json')
 
 function encode(data) {
     return new Promise((res, rej) => {
@@ -70,10 +59,6 @@ function prepareModel() {
     return model
 }
 
-
-/*
-* MAIN
-* */
 const items = JSON.parse(fs.readFileSync('./training/sample.json'))
 
 encode(items.map(e => e.text.toLowerCase()))

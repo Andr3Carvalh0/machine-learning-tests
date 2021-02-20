@@ -9,18 +9,7 @@ const chunk = (arr, size) =>
         arr.slice(i * size, i * size + size)
     )
 
-const CATEGORIES = [
-    'No Issue/Not Clear',
-    'Player/Watching',
-    'App Performance/Stability',
-    'Not Working (General)',
-    'AirPlay/Chromecast',
-    'Out Of Home',
-    'Recordings',
-    'Account issues',
-    'Suggestions',
-    'Other'
-]
+const CATEGORIES = require('./output/model/categories.json')
 
 function encode(data) {
     return new Promise((res, rej) => {
