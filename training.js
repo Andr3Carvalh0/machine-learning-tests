@@ -29,31 +29,57 @@ function route(tag) {
     return result
 }
 
-function prepareModel() {
+function prepareModel(itemsLength, inputLength, outputLength) {
     const model = tf.sequential()
 
+/*    model.add(tf.layers.conv1d({
+        inputShape: [itemsLength, inputLength],
+        filters: 50,
+        kernelSize: 2,
+        padding: 'valid',
+        activation: 'relu'
+    }))
+
+    model.add(tf.layers.conv1d({
+        inputShape: [itemsLength - 1, 50],
+        filters: 50,
+        kernelSize: 3,
+        padding: 'valid',
+        activation: 'relu'
+    }))
+
+    model.add(tf.layers.conv1d({
+        inputShape: [itemsLength  - 3, 50],
+        filters: 50,
+        kernelSize: 4,
+        padding: 'valid',
+        activation: 'relu'
+    }))
+
+    model.add(tf.layers.globalMaxPool1d({
+        inputShape: [itemsLength - 6, 50]
+    }))*/
+
     model.add(tf.layers.dense({
-        inputShape: [512],
-        activation: 'sigmoid',
-        units: CATEGORIES.length
+        inputShape: [inputLength],
+        activation: 'relu',
+        units: outputLength
+    }))
+
+    model.add(tf.layers.dropout({
+        rate: 0.1
     }))
 
     model.add(tf.layers.dense({
-        inputShape: [2],
-        activation: 'sigmoid',
-        units: CATEGORIES.length
-    }))
-
-    model.add(tf.layers.dense({
-        inputShape: [2],
-        activation: 'sigmoid',
-        units: CATEGORIES.length
+        inputShape: [outputLength],
+        activation: 'softmax',
+        units: outputLength
     }))
 
     model.compile({
         loss: tf.losses.softmaxCrossEntropy,
-        optimizer: tf.train.adam(.06),
-        // metrics: ['AUC']
+        optimizer: tf.train.adam(.001),
+        metrics: ['accuracy']
     })
 
     return model
@@ -63,9 +89,9 @@ const items = JSON.parse(fs.readFileSync('./training/sample.json'))
 
 encode(items.map(e => e.text.toLowerCase()))
     .then((data) => {
-        const model = prepareModel()
+        const model = prepareModel(data.shape[0], data.shape[1], CATEGORIES.length)
 
-        model.fit(data, tf.tensor2d(items.map(e => route(e.tag))), { epochs: 50 })
+        model.fit(data, tf.tensor2d(items.map(e => route(e.tag))), { epochs: 500 })
             .then((history) => {
                 model.save(`file:///${resolve('./')}/output/model`)
                     .then(() => {
