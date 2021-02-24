@@ -32,7 +32,7 @@ function askInput(items, index, transformed) {
 
         console.log('\n')
 
-        rl.question(`'${e.text.replace('\n', '')}'\n'${e.translated.replace('\n', '')}'\n\nFits in which category?`, (code) => {
+        rl.question(`${transformed.length + 1})'${e.text.replace('\n', '')}'\n'${e.translated.replace('\n', '')}'\n\nFits in which category?`, (code) => {
             transformed.push({
                 text: e.text,
                 translated: e.translated,
@@ -48,6 +48,17 @@ function whenDone(transformed) {
     write(`./output/reviews.json`, JSON.stringify(transformed))
 }
 
-askInput(
-    convert(`./convert/app_store.json`).concat(convert(`./convert/play_store.json`))
-)
+let file = undefined
+
+while (file === undefined) {
+    const files = fs.readdirSync('./to_convert/').filter(e => e !== '.DS_Store')
+
+    for (let i = 0; i < files.length; i++) {
+        if (!fs.existsSync(`./converted/${files[i]}`)) {
+            file = files[i]
+            break
+        }
+    }
+}
+
+askInput(convert(`./to_convert/${file}`))
