@@ -16,13 +16,17 @@ function write(filename, content) {
     fs.writeFileSync(`${filename}`, content)
 }
 
-function askInput(items, index, transformed) {
+function askInput(items, path, index, transformed) {
     index = index || 0
     transformed = transformed || []
 
+    if (transformed.length === 0) {
+        console.log(`Classifing ${path}\n`)
+    }
+
     if (transformed.length === items.length) {
         rl.close()
-        whenDone(transformed)
+        whenDone(transformed, path)
     } else {
         const e = items[index]
 
@@ -39,13 +43,13 @@ function askInput(items, index, transformed) {
                 tag: CATEGORIES[parseInt(code) - 1]
             })
 
-            askInput(items, index + 1, transformed)
+            askInput(items, path, index + 1, transformed)
         })
     }
 }
 
-function whenDone(transformed) {
-    write(`./output/reviews.json`, JSON.stringify(transformed))
+function whenDone(transformed, file) {
+    write(`./converted/${file}`, JSON.stringify(transformed))
 }
 
 let file = undefined
@@ -61,4 +65,4 @@ while (file === undefined) {
     }
 }
 
-askInput(convert(`./to_convert/${file}`))
+askInput(convert(`./to_convert/${file}`), file)

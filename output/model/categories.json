@@ -1,5 +1,6 @@
 [
-	"No Issue",
+	"No Issue (Positive)",
+	"No Issue (Negative)",
 	"Player/Watching",
 	"App Performance/Stability",
 	"Not Working (General)",
@@ -8,5 +9,5 @@
 	"Recordings",
 	"Account issues",
 	"Suggestions",
-	"Other"
+	"Feature missing/unclear"
 ]
